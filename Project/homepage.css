@@ -1,0 +1,60 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.icon-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.icon {
+    background-color: #f7f7f7;
+    padding: 20px;
+    margin: 20px;
+    width: 250px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.icon i {
+    font-size: 48px;
+    color: #333;
+}
+
+.icon h2 {
+    margin-top: 0;
+}
+
+.icon p {
+    font-size: 16px;
+    color: #666;
+}
+
+.icon button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.icon button:hover {
+    background-color: #3e8e41;
+}

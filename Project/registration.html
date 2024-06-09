@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>Registration</title>
+
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/responsive.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="hero_area">
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="index.html">
+            <img src="images/logo.png" alt="" />
+            <span>Dynamic Minds</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="slider_section">
+      <div class="carousel_btn-container"></div>
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-5 offset-md-1">
+                  <div class="detail-box">
+                    <h1>Sign Up</h1>
+                    <h3>
+                      <table align="center">
+                        <form method="post" action="http://localhost:8080/examples/Project/register.jsp">
+                          <tr>
+                            <td><label for="first">First Name:</label></td>
+                            <td><input type="text" id="first" name="first" onblur="fval();" /></td>
+                            <td><div id="errFirst"></div></td>
+                          </tr>
+                          <tr>
+                            <td><label for="last">Last Name:</label></td>
+                            <td><input type="text" id="last" name="last" onblur="lval();" /></td>
+                            <td><div id="errLast"></div></td>
+                          </tr>
+                          <tr>
+                            <td><label for="email">Email:</label></td>
+                            <td><input type="text" id="email" name="email" onblur="eval();" /></td>
+                            <td><div id="errEmail"></div></td>
+                          </tr>
+                          <tr>
+                            <td><label for="uid"> Id:</label></td>
+                            <td><input type="text" id="uid" name="uid" onblur="uval();" /></td>
+                            <td><div id="errUid"></div></td>
+                          </tr>
+                          <tr>
+                            <td><label for="password">Password:</label></td>
+                            <td><input type="password" id="password" name="password" onblur="pval();" /></td>
+                            <td><div id="errPassword"></div></td>
+                          </tr>
+                          <tr>
+                            <td><label for="confirm"> Password:</label></td>
+                            <td><input type="password" id="confirm" name="confirm" onblur="cval();" /></td>
+                            <td><div id="errConfirm"></div></td>
+                          </tr>
+                          <tr>
+                            <td><label for="mobile"> Number:</label></td>
+                            <td><input type="text" id="mobile" name="mobile" onblur="mval();" /><br></td>
+                            <td><div id="errMobile"></div></td>
+                          </tr>
+                          <tr>
+                            <div class="btn-box">
+                              <td colspan="2" align="center"><input type="submit" value="Submit" class="btn-1" /></td>
+                            </div>
+                          </tr>
+                        </form>
+                      </table>
+                    </h3>
+                  </div>
+                </div>
+                <div class="offset-md-1 col-md-4 img-container">
+                  <div class="img-box">
+                    <img src="images/slider-img.png" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/custom.js"></script>
+
+  <script type="text/javascript">
+    function fval() {
+      var first = document.getElementById('first').value;
+      if (first == "")
+        document.getElementById('errFirst').innerHTML = "<span style='color:red'>Please enter your first name!</span>";
+      else
+        document.getElementById('errFirst').innerHTML = "";
+    }
+
+    function lval() {
+      var last = document.getElementById('last').value;
+      if (last == "")
+        document.getElementById('errLast').innerHTML = "<span style='color:red'>Please enter your last name!</span>";
+      else
+        document.getElementById('errLast').innerHTML = "";
+    }
+
+    function eval() {
+      var email = document.getElementById('email').value;
+      var atpos = email.indexOf("@");
+      var dotpos = email.lastIndexOf(".");
+      if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= email.length)
+        document.getElementById('errEmail').innerHTML = "<span style='color: red'>Enter a valid email address!</span>";
+      else
+        document.getElementById('errEmail').innerHTML = "";
+    }
+
+    function uval() {
+      var uid = document.getElementById('uid').value;
+      var errUid = document.getElementById('errUid');
+
+      if (uid === "") {
+        errUid.innerHTML = "<span style='color:red'>Please enter your user id!</span>";
+      } else if (!/^\d{6}$/.test(uid) && !/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9]+$/.test(uid)) {
+        errUid.innerHTML = "<span style='color:red'>Invalid format! Format: 6 digits for teacher, for student, e.g., hu21csen0100100</span>";
+      } else {
+        errUid.innerHTML = "";
+      }
+    }
+
+    function pval() {
+      var password = document.getElementById('password').value;
+      var uid = document.getElementById('uid').value;
+      var red = /[0-9]/;
+      var rel = /[a-z]/;
+      var reu = /[A-Z]/;
+      var res = /[!@#\$%\^&\*]/;
+      if (password == "")
+        document.getElementById('errPassword').innerHTML = "<span style='color:red'>Please enter your password!</span>";
+      else if (password.length < 6)
+        document.getElementById('errPassword').innerHTML = "<span style='color:red'>Password must contain at least six characters!</span>";
+      else if (password == uid)
+        document.getElementById('errPassword').innerHTML = "<span style='color:red'>Password must be different from Username!</span>";
+      else if (!red.test(password))
+        document.getElementById('errPassword').innerHTML = "<span style='color:red'>Password must contain at least one number (0-9)!</span>";
+      else if (!rel.test(password))
+        document.getElementById('errPassword').innerHTML = "<span style='color:red'>Password must contain at least one lowercase letter (a-z)!</span>";
+      else if (!reu.test(password))
+        document.getElementById('errPassword').innerHTML = "<span style='color:red'>Password must contain at least one uppercase letter (A-Z)!</span>";
+      else if (!res.test(password))
+        document.getElementById('errPassword').innerHTML = "<span style='color:red'>Password must contain at least one special character!</span>";
+      else
+        document.getElementById('errPassword').innerHTML = "";
+    }
+
+    function cval() {
+      var first = document.getElementById('password').value;
+      var second = document.getElementById('confirm').value;
+      if (second != first)
+        document.getElementById('errConfirm').innerHTML = "<span style='color: red'>Your passwords don't match!</span>";
+      else
+        document.getElementById('errConfirm').innerHTML = "";
+    }
+
+    function mval() {
+      var mobile = document.getElementById('mobile').value;
+      if (mobile == "" || mobile.length != 10 || isNaN(mobile))
+        document.getElementById('errMobile').innerHTML = "<span style='color:red'>Please enter correct mobile number!</span>";
+      else
+        document.getElementById('errMobile').innerHTML = "";
+    }
+  </script>
+</body>
+
+</html>
