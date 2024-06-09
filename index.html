@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Tax Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+<body>
+    <div id="app">
+        <h1>Tax Calculator</h1>
+        <label>
+            <p>
+                <span>Enter gross annual income</span>
+                <span class="bi bi-question-circle tooltip">
+                    <span class="tooltiptext">Gross annual income is your total salary in a year before any deductions</span>
+                </span>
+            </p>
+            <input type="text" placeholder="Enter gross annual income" id="gross-income" />
+            <i class="bi bi-exclamation-circle tooltip" id="error-icon-gross-income">
+                <span class="tooltiptext" id="error-text-gross-income">Please enter numbers only</span>
+            </i>
+        </label>
+        <label>
+            <p>
+                <span>Enter extra income</span>
+                <span class="bi bi-question-circle tooltip">
+                    <span class="tooltiptext">Extra income is your income from other sources excluding gross income</span>
+                </span>
+            </p>
+            <input type="text" placeholder="Enter extra income from other sources" id="extra-income" />
+            <i class="bi bi-exclamation-circle tooltip" id="error-icon-extra-income">
+                <span class="tooltiptext" id="error-text-extra-income">Please enter numbers only</span>
+            </i>
+        </label>
+        <label>
+            <p>
+                <span class="select-label">Enter age group</span>
+                <span class="bi bi-question-circle tooltip">
+                    <span class="tooltiptext">Select your age from given age group options</span>
+                </span>
+            </p>
+            <div id="select-container">
+                <select id="age-group">
+                    <option value="" disabled selected hidden>Select age group</option>
+                    <option value="lessthan40">&lt; 40</option>
+                    <option value="between40and60">≥ 40 &lt; 60</option>
+                    <option value="greaterthan60">≥ 60</option>
+                </select>
+                <div class="error-icon-container">
+                    <i class="bi bi-exclamation-circle tooltip" id="error-icon-age-group">
+                        <span class="tooltiptext" id="error-text-age-group">Please select an age group</span>
+                    </i>
+                </div>
+            </div>
+        </label>
+        <label>
+            <p class="deductions-label">
+                <span>Enter total applicable deductions</span>
+                <span class="bi bi-question-circle tooltip">
+                    <span class="tooltiptext">Enter total applicable deductions for gross and extra income</span>
+                </span>
+            </p>
+            <input type="text" placeholder="Add total applicable deductions" id="total-deductions" />
+            <i class="bi bi-exclamation-circle tooltip" id="error-icon-total-deductions">
+                <span class="tooltiptext" id="error-text-total-deductions">Please enter numbers only</span>
+            </i>
+        </label>
+        <button class="submit" type="button">Submit</button>
+        <div id="result" style="display: none;">
+            <h2>Your overall income will be</h2>
+            <h3 id="overall-income">0</h3>
+            <h5 id="tax-text">after tax deductions</h5>
+            <button class="close">Close</button>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Inputs
+        const inputs = document.querySelectorAll("input:not(:disabled), select:not(:disabled)");
+        // Error icons
+        const errorIcons = document.querySelectorAll(".bi-exclamation-circle");
+        // Error texts
+        const errorTexts = Array.from(errorIcons).map(icon => icon.querySelector(".tooltiptext"));
+
+        // Age group input
+        const ageGroup = document.querySelector("#age-group");
+
+        // Overall income element
+        const overallIncome = document.querySelector("#overall-income");
+        // Modal
+        const resultDiv = document.querySelector("#result");
+        // Close button
+        const closeButton = document.querySelector(".close");
+        // Submit button
+        const submitButton = document.querySelector(".submit");
+        // Tax text
+        const taxText = document.querySelector("#tax-text");
+
+        // overall income value
+        let overAllIncome = 0;
+
+        // Income limit
+        const incomeLimit = 800000;
+
+        // Functions
+
+        // Input checker function
+        // This function checks if the values in input and select field are valid or not and shows error icon accordingly
+        const inputChecker = (input, errorIcon, errorText) => {
+            if (input === ageGroup) {
+                if (input.value === "") {
+                    errorIcon.style.display = "flex";
+                    errorText.innerText = "Please select an age group";
+                } else {
+                    errorIcon.style.display = "none";
+                }
+            } else if (input.value.length === 0) {
+                errorIcon.style.display = "flex";
+                errorText.innerText = "This input field is mandatory";
+            } else if (isNaN(input.value)) {
+                errorIcon.style.display = "flex";
+                errorText.innerText = "Please enter numbers only";
+            } else if (Number(input.value) < 0) {
+                errorIcon.style.display = "flex";
+                errorText.innerText = "Please enter non-negative numbers only";
+            } else {
+                errorIcon.style.display = "none";
+            }
+        };
+
+        // Submit checker function
+        // This function checks for errors after the submit button is clicked, it returns true if all inputs are valid and error-free
+        const submitChecker = () => {
+            let checkedInputs = Array.from(inputs).filter((inp) =>
+                inp === ageGroup
+                    ? inp.value.length > 0
+                    : inp.value.length > 0 && !isNaN(inp.value) && inp.value >= 0,
+            );
+
+            return checkedInputs.length === inputs.length;
+        };
+
+        // Tax calculator function
+        // Calculates the overall income after tax calculations
+        const taxCalculator = () => {
+            let incomeAfterDeductions =
+                Number(inputs[0].value) + Number(inputs[1].value) - Number(inputs[3].value);
+
+            overAllIncome =
+                incomeAfterDeductions <= incomeLimit
+                    ? Number(inputs[0].value) + Number(inputs[1].value)
+                    : taxedIncomeCalculator(incomeAfterDeductions);
+            overallIncome.innerText = "₹ " + overAllIncome;
+            taxText.innerText =
+                incomeAfterDeductions <= incomeLimit
+                    ? "no tax applicable"
+                    : "after tax deductions";
+        };
+
+        // Taxed income calculator function
+        // Calculates tax amounts which need to be deducted
+        const taxedIncomeCalculator = (incomeAfterDeductions) => {
+            let taxableIncome = incomeAfterDeductions - incomeLimit;
+            let taxAmount =
+                ageGroup.value === "lessthan40"
+                    ? 0.3 * taxableIncome
+                    : ageGroup.value === "between40and60"
+                        ? 0.4 * taxableIncome
+                        : 0.1 * taxableIncome;
+            return incomeAfterDeductions - taxAmount;
+        };
+
+        // Event listeners
+
+        // Hide the modal if close button is clicked
+        closeButton.addEventListener("click", () => {
+            resultDiv.style.display = "none";
+        });
+
+        // Checks every event for focus and change and calls inputChecker function to verify valid inputs and show error if invalid inputs
+        inputs.forEach((input, index) => {
+            input.addEventListener("change", () => {
+                inputChecker(input, errorIcons[index], errorTexts[index]);
+            });
+            input.addEventListener("focus", () => {
+                inputChecker(input, errorIcons[index], errorTexts[index]);
+            });
+        });
+
+        // Shows modal on click of submit button if all inputs are valid. Calls tax calculator function for overall income. Shows error icons if inputs are invalid
+        submitButton.addEventListener("click", () => {
+            console.log("Submit button clicked");  // Debugging line
+            if (submitChecker()) {
+                console.log("All inputs are valid");  // Debugging line
+                taxCalculator();
+                resultDiv.style.display = "flex";
+                inputs.forEach((input) => (input.value = ""));
+            } else {
+                inputs.forEach((input, index) => {
+                    inputChecker(input, errorIcons[index], errorTexts[index]);
+                });
+            }
+        });
+    });
+    </script>
+</body>
+</html>
